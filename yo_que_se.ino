@@ -12,6 +12,9 @@ int medicionR();
 int Divisor;
 int Vol();
 int SAMPLESNUMBER = 100;
+int sensorPin = A3;    
+int valorsensor;
+
 
 bool MT = true;
 
