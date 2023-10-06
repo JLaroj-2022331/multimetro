@@ -65,7 +65,7 @@ medicionR();
 break;
   
 case 'C':
-float Idc=calculoCorriente(500);
+float Idc=calculoCorriente(100);
 Serial.print("corriente: ");
 Serial.println(Idc, 3);
 delay(100);
