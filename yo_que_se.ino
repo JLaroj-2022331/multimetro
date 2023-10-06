@@ -125,7 +125,6 @@ float calculoCorriente(int numeroMuestras)
     leerAcs712 = analogRead(A3)*(5.02/1023.0);
     intensidad=intensidad+(leerAcs712 - 2.5)/sensibilidad;
   }
-  intensidad=intensidad/numeroMuestras;
-  return(intensidad);
+  return(intensidad/numeroMuestras);
 }
 
