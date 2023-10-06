@@ -3,7 +3,7 @@ String msg;
 
 
 
-#define DV A0
+#define DV A5
 #define sensorVoltajepin A1      
 
 unsigned int raw_sensor = 0;
@@ -41,20 +41,6 @@ opcion = Serial.read();
 
 switch(opcion)
 {
-case 'C':
-float Idc=calculoCorriente(500);
-Serial.print("corriente: ");
-Serial.println(Idc, 3);
-delay(100);
-break;
-  
-case 'V':
-Vol();
-break; 
-
-case 'R':
-medicionR();
-break;  
 
 case 'A':
  if(MT){
@@ -69,6 +55,22 @@ case 'A':
 
  MT=false;
 break;
+
+case 'V':
+Vol();
+break; 
+
+case 'R':
+medicionR();
+break;
+  
+case 'C':
+float Idc=calculoCorriente(500);
+Serial.print("corriente: ");
+Serial.println(Idc, 3);
+delay(100);
+break;
+    
 }
 }
 }
@@ -120,9 +122,10 @@ float calculoCorriente(int numeroMuestras)
   float intensidad = 0;
   for(int i=0; i<numeroMuestras; i++)
   {
-    leerAcs712 = analogRead(A3)*(5.02/1023.0);
+    leerAcs712 = analogRead(A0)*(5.02/1023.0);
     intensidad=intensidad+(leerAcs712 * 2.3)/sensibilidad;
   }
   intensidad=intensidad/numeroMuestras;
   return(intensidad);
 }
+
