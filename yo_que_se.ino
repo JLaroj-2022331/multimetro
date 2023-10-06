@@ -11,14 +11,11 @@ int texto();
 int medicionR();
 int Divisor;
 int Vol();
-int SAMPLESNUMBER = 100;
-int sensorPin = A3;    
-int valorsensor;
 
 
 bool MT = true;
 
-float SEN = 0.185; 
+float sensibilidad=0.185;
 float Vt=0;
 float voltaje_sensado = 0;
 float vcc=5;
@@ -33,13 +30,6 @@ void setup() {
 
 void loop()
 {
-float current = getCorriente(SAMPLESNUMBER);
-  float currentRMS = 0.707 * current; 
-  float power = 230.0 * currentRMS;
-
-   printm("intensidad", current, "A ,");
-   printm("Irms", currentRMS, "A . ");
-   printm("Potencia", power, "W");
       
 if (Serial.available())
 {
@@ -51,6 +41,21 @@ opcion = Serial.read();
 
 switch(opcion)
 {
+case 'C':
+float Idc=calculoCorriente(500);
+Serial.print("corriente: ");
+Serial.println(Idc, 3);
+delay(100);
+break;
+  
+case 'V':
+Vol();
+break; 
+
+case 'R':
+medicionR();
+break;  
+
 case 'A':
  if(MT){
   Serial.println("menu de opciones");
@@ -64,31 +69,6 @@ case 'A':
 
  MT=false;
 break;
- 
-case 'r':
-texto();
-break; 
-
-case 'V':
-Vol();
-break; 
-
-case 'v':
-texto();
-break;  
-
-case 'R':
-medicionR();
-break; 
-
-case 'C':
-void printm();
-break;
-
-case 'c':
-texto();
-break; 
- 
 }
 }
 }
@@ -134,19 +114,15 @@ float fmap(float x, float in_min, float in_max, float out_min, float out_max)
   return (x-in_min)*(out_max - out_min)/(in_max - in_min) + out_min;
 }
 
-void printm( String prefix, float value1, String postfix)
+float calculoCorriente(int numeroMuestras)
 {
-  Serial.print(value1, 3);
-  }
-
-float getCorriente(int SN){
-  float Volt;
-  float corriente = 0;
-
-  for(int i=0; i < SN; i++)
+  float leerAcs712 = 0;
+  float intensidad = 0;
+  for(int i=0; i<numeroMuestras; i++)
   {
-    Volt = analogRead(A1) * 5.0 / 1023.0;
-    corriente += (Volt -2.5) / SEN;
+    leerAcs712 = analogRead(A3)*(5.02/1023.0);
+    intensidad=intensidad+(leerAcs712 * 2.3)/sensibilidad;
   }
-  return(corriente / SN);
+  intensidad=intensidad/numeroMuestras;
+  return(intensidad);
 }
