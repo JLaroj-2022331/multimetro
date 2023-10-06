@@ -3,7 +3,7 @@ String msg;
 
 
 
-#define DV A5
+#define DV A0
 #define sensorVoltajepin A1      
 
 unsigned int raw_sensor = 0;
@@ -122,7 +122,7 @@ float calculoCorriente(int numeroMuestras)
   float intensidad = 0;
   for(int i=0; i<numeroMuestras; i++)
   {
-    leerAcs712 = analogRead(A0)*(5.02/1023.0);
+    leerAcs712 = analogRead(A3)*(5.02/1023.0);
     intensidad=intensidad+(leerAcs712 - 2.5)/sensibilidad;
   }
   intensidad=intensidad/numeroMuestras;
