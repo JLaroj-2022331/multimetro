@@ -2,9 +2,7 @@ char opcion;
 String msg;
 
 
-#define ledR 2
-#define ledV 3
-#define ledC 4
+
 #define DV A0
 #define sensorVoltajepin A1      
 
@@ -13,9 +11,11 @@ int texto();
 int medicionR();
 int Divisor;
 int Vol();
+int SAMPLESNUMBER = 100;
 
 bool MT = true;
 
+float SEN = 0.185; 
 float Vt=0;
 float voltaje_sensado = 0;
 float vcc=5;
@@ -24,15 +24,20 @@ float R2=10000;
 
 void setup() {
   Serial.begin(9600);
-  pinMode(ledR, OUTPUT);
-  pinMode(ledV, OUTPUT);
-  pinMode(ledC, OUTPUT);
   pinMode(sensorVoltajepin, INPUT);    
 
 }
 
 void loop()
 {
+float current = getCorriente(SAMPLESNUMBER);
+  float currentRMS = 0.707 * current; 
+  float power = 230.0 * currentRMS;
+
+   printm("intensidad", current, "A ,");
+   printm("Irms", currentRMS, "A . ");
+   printm("Potencia", power, "W");
+      
 if (Serial.available())
 {
 opcion = Serial.read(); 
@@ -59,23 +64,26 @@ break;
  
 case 'r':
 texto();
-digitalWrite(ledR, LOW); 
 break; 
 
 case 'V':
-digitalWrite(ledV, HIGH); 
 Vol();
 break; 
 
 case 'v':
-digitalWrite(ledV, LOW); 
 texto();
 break;  
 
 case 'R':
-digitalWrite(ledR, HIGH); 
 medicionR();
+break; 
 
+case 'C':
+void printm();
+break;
+
+case 'c':
+texto();
 break; 
  
 }
@@ -107,18 +115,6 @@ if(Divisor)
 int texto()
 {
 Serial.println("que desea medir?");
-digitalWrite(ledR, HIGH);
-delay(250);
-digitalWrite(ledR, LOW);
-delay(250);
-digitalWrite(ledV, HIGH);
-delay(250);
-digitalWrite(ledV, LOW);
-delay(250);
-digitalWrite(ledC, HIGH);
-delay(250);
-digitalWrite(ledC, LOW);
-delay(250);
 }
 
 int Vol()
@@ -133,4 +129,24 @@ int Vol()
 float fmap(float x, float in_min, float in_max, float out_min, float out_max)
 {
   return (x-in_min)*(out_max - out_min)/(in_max - in_min) + out_min;
+}
+
+void printm( String prefix, float value1, String postfix)
+{
+  Serial.print(prefix);
+  Serial.print(value1, 3);
+  Serial.print(postfix);
+  
+}
+
+float getCorriente(int SN){
+  float Volt;
+  float corriente = 0;
+
+  for(int i=0; i < SN; i++)
+  {
+    Volt = analogRead(A1) * 5.0 / 1023.0;
+    corriente += (Volt -2.5) / SEN;
+  }
+  return(corriente / SN);
 }
