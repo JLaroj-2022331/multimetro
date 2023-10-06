@@ -136,11 +136,8 @@ float fmap(float x, float in_min, float in_max, float out_min, float out_max)
 
 void printm( String prefix, float value1, String postfix)
 {
-  Serial.print(prefix);
   Serial.print(value1, 3);
-  Serial.print(postfix);
-  
-}
+  }
 
 float getCorriente(int SN){
   float Volt;
